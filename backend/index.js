@@ -21,21 +21,20 @@ app.get('/messages', (req, res)=>{
 });
 
 
-//long polling
-const subscribers={}; //subscribers={1:res, 2:res, ....}
+
+const subscribers={}; 
 
 app.get('/long-messages-sub', (req, res)=>{
     const ID = Math.ceil(Math.random() * 1000000)
-    subscribers[ID] = res;  //no res (hang)
+    subscribers[ID] = res;  
 })
 
 app.post('/long-messages', (req, res)=>{
     const { body } = req;
-    //to convert obj into array
-    //send the incomming new messages to all subscribers
+   
     Object.entries(subscribers).forEach(([ID, response])=>{
         response.json(body)
-        delete subscribers[ID]   //response sent 1111
+        delete subscribers[ID]  
     })
     res.status(204).end()
 })
